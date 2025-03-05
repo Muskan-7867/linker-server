@@ -1,15 +1,22 @@
 import userRouter from "./src/router/userRouter.js"
 import linkTreeRouter from "./src/router/linktree.router.js"
 import cors from 'cors'
+import dotenv from "dotenv";
 import express from 'express';
-
+dotenv.config();
 
 const app = express();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const allowedOrigins = [
+  process.env.VITE_FRONTEND_URL || "http://localhost:5173",
+  process.env.VITE_BACKEND_URL || "http://localhost:8000"
+,
+];
 const corsOptions = {
-  origin: "[http://localhost:5173]",
+  origin: allowedOrigins,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   optionsSuccessStatus: 204,
