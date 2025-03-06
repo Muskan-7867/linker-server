@@ -4,7 +4,7 @@ import createHttpError from "http-errors";
 
 // ✅ Create a new Linktree
 export const createLinktree = async (req, res, next) => {
-  const FRONEND_URL = process.env.VITE_FRONTEND_URL;
+  const FRONEND_URL = process.env.VITE_FRONTEND_URL || "http://localhost:5173";
   try {
     const { treeName, links } = req.body;
 

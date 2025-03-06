@@ -11,8 +11,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const allowedOrigins = [
-  process.env.VITE_FRONTEND_URL ,
-  process.env.VITE_BACKEND_URL 
+  process.env.VITE_FRONTEND_URL || "http://localhost:5173", ,
+  process.env.VITE_BACKEND_URL || "http://localhost:8000"
 ,
 ];
 const corsOptions = {
