@@ -4,6 +4,7 @@ import createHttpError from "http-errors";
 
 // ✅ Create a new Linktree
 export const createLinktree = async (req, res, next) => {
+  const FRONEND_URL = process.env.VITE_FRONTEND_URL;
   try {
     const { treeName, links } = req.body;
 
@@ -21,7 +22,7 @@ export const createLinktree = async (req, res, next) => {
     await newLinktree.save();
 
     const linktreeId = newLinktree._id;
-    const linktreeUrl = `http://localhost:5173/linktree/${linktreeId}`;
+    const linktreeUrl = `${FRONEND_URL}/linktree/${linktreeId}`;
     res.status(201).json({ message: "Linktree created successfully", link: newLinktree, url: linktreeUrl });
   } catch (error) {
     console.error("Error creating Linktree:", error);
@@ -86,7 +87,7 @@ export const getLinktree = async (req, res, next) => {
       return next(createHttpError(404, "Linktree not found"));
     }
 
-    const linktreeUrl = `http://localhost:5173/linktree/${treeId}`;
+    const linktreeUrl = `${FRONEND_URL}/linktree/${treeId}`;
     res.status(200).json({ message: "Linktree fetched successfully", linktree, url: linktreeUrl });
   } catch (error) {
     console.error("Error fetching Linktree:", error);
