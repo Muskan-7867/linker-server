@@ -1,12 +1,15 @@
-
+import dotenv from "dotenv";
+dotenv.config();
 import createHttpError from "http-errors";
 import bcrypt from "bcryptjs";
 
 import jwt from "jsonwebtoken";
+import  userModel  from "../models/user.model.js"
 
 
-import   userModel  from "../models/user.model.js"
-
+// Debug: Check if JWT_SECRET is loaded
+// console.log("JWT_SECRET:", process.env.JWT_SECRET);
+const JWT_SECRET = "hfhfhfhfh";
 const demo = async (req, res) => {
   res.send("demo success");
 };
@@ -42,7 +45,7 @@ const createUser = async (req, res, next) => {
     // Generate JWT token
     const token = jwt.sign(
       { userId: newUser._id, email: newUser.email },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: "1h" }
     );
 
@@ -86,7 +89,7 @@ const loginUser = async (req, res, next) => {
     // Create access token
     const token = jwt.sign(
       { userId: user._id, email: user.email, username: user.username },
-      process.env.JWT_SECRET ,
+      JWT_SECRET ,
       { expiresIn: "1h" }
     );
 
