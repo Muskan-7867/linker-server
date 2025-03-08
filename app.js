@@ -10,11 +10,13 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const allowedOrigins = [
-  process.env.VITE_FRONTEND_URL || "http://localhost:5173", ,
-  process.env.VITE_BACKEND_URL || "http://localhost:8000"
-,
-];
+  const isProduction = process.env.PROD; 
+  const FRONTEND_URL = isProduction
+    ? process.env.VITE_FRONTEND_URL
+    : "http://localhost:5173";
+const allowedOrigins = [FRONTEND_URL];
+
+  
 const corsOptions = {
   origin: allowedOrigins,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
@@ -33,4 +35,4 @@ app.use("/api/v1/user", userRouter);
 // Links Routes
 app.use("/api/v1/link", linkTreeRouter);
 
-export default app;
+export default app; 
