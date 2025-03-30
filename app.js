@@ -1,28 +1,27 @@
-import userRouter from "./src/router/userRouter.js"
-import linkTreeRouter from "./src/router/linktree.router.js"
-import cors from 'cors'
+import userRouter from "./src/router/userRouter.js";
+import linkTreeRouter from "./src/router/linktree.router.js";
+import cors from "cors";
 import dotenv from "dotenv";
-import express from 'express';
+import express from "express";
+
+// Load environment variables from .env file
 dotenv.config();
 
 const app = express();
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-  const isProduction = process.env.PROD; 
-  const FRONTEND_URL = isProduction
-    ? process.env.VITE_FRONTEND_URL
-    : "http://localhost:5173";
-const allowedOrigins = [FRONTEND_URL];
 
-  
+// CORS configuration
 const corsOptions = {
-  origin: allowedOrigins,
+  origin: "http://localhost:5173",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
   optionsSuccessStatus: 204,
 };
+
 app.use(cors(corsOptions));
 
 // Welcome Route
@@ -32,7 +31,18 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/api/v1/user", userRouter);
-// Links Routes
 app.use("/api/v1/link", linkTreeRouter);
 
-export default app; 
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: "Something went wrong!" });
+});
+
+// Start the server
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}`);
+// });
+
+export default app;
