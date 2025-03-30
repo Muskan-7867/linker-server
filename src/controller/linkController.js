@@ -2,33 +2,32 @@
 import linkModel from "../models/linktree.model.js"
 import createHttpError from "http-errors";
 
+const FRONTEND_URL =   "http://localhost:5173";
+const BACKEND_URL =  "http://localhost:8083";
 // ✅ Create a new Linktree
 export const createLinktree = async (req, res, next) => {
-  const isProduction = import.meta.env.PROD;
-const FRONTEND_URL = isProduction
-  ? process.env.VITE_FRONTEND_URL
-  : "http://localhost:5173";
-const BACKEND_URL = isProduction
-  ? process.env.VITE_BACKEND_URL
-  : "http://localhost:8000";
+  
+
   try {
     const { treeName, links } = req.body;
+    console.log("from body --13",req.body);
 
-    if (!treeName || !Array.isArray(links) || links.length === 0) {
-      return next(createHttpError(400, "Tree name and at least one link are required."));
-    }
+    // if (!treeName || !Array.isArray(links) || links.length === 0) {
+    //   return next(createHttpError(400, "Tree name and at least one link are required."));
+    // }
 
-    for (const link of links) {
-      if (!link.title || !link.icon || !link.url) {
-        return next(createHttpError(400, "Each link must have a title, icon, and URL."));
-      }
-    }
+    // for (const link of links) {
+    //   if (!link.title || !link.icon || !link.url) {
+    //     return next(createHttpError(400, "Each link must have a title, icon, and URL."));
+    //   }
+    // }
 
     const newLinktree = new linkModel({ treeName, links });
+    console.log("newLinktree", newLinktree);
     await newLinktree.save();
 
     const linktreeId = newLinktree._id;
-    const linktreeUrl = `${FRONEND_URL}/linktree/${linktreeId}`;
+    const linktreeUrl = `http://localhost:5173/linktree/${linktreeId}`;
     res.status(201).json({ message: "Linktree created successfully", link: newLinktree, url: linktreeUrl });
   } catch (error) {
     console.error("Error creating Linktree:", error);
@@ -87,13 +86,16 @@ export const deleteLinktree = async (req, res, next) => {
 export const getLinktree = async (req, res, next) => {
   try {
     const { treeId } = req.params;
-
+console.log("treeId", treeId);
     const linktree = await linkModel.findById(treeId);
     if (!linktree) {
       return next(createHttpError(404, "Linktree not found"));
     }
 
-    const linktreeUrl = `${FRONEND_URL}/linktree/${treeId}`;
+    const linktreeUrl = `http://localhost:5173/linktree/${treeId}`;
+    if(!linktreeUrl) {
+      return next(createHttpError(404, "Linktree URL not found"));
+    }
     res.status(200).json({ message: "Linktree fetched successfully", linktree, url: linktreeUrl });
   } catch (error) {
     console.error("Error fetching Linktree:", error);
